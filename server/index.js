@@ -10,6 +10,7 @@ require('dotenv').config();
 const server = express();
 server.use(express.json());
 server.use(cors());
+server.use(cors({ origin: 'http://localhost:5173' }));
 
 const mysqlConfig = {
   host: 'localhost',
@@ -45,9 +46,9 @@ server.post('/login', async (req, res) => {
   try {
     const [data] = await dbPool.execute(
       `
-        SELECT * FROM organizators
-        WHERE email = ?
-    `,
+SELECT * FROM organizators
+WHERE email = ?
+`,
       [payload.email]
     );
 
@@ -93,9 +94,9 @@ server.post('/register', async (req, res) => {
     const encryptedPassword = await bcrypt.hash(payload.password, 10);
     const [response] = await dbPool.execute(
       `
-            INSERT INTO organizators (full_name, email, password)
-            VALUES (?, ?, ?)
-        `,
+INSERT INTO organizators (full_name, email, password)
+VALUES (?, ?, ?)
+`,
       [payload.full_name, payload.email, encryptedPassword]
     );
     const token = jwt.sign(
@@ -118,11 +119,11 @@ server.get('/participants', authenticate, async (req, res) => {
     const organizatorId = req.user.id;
     const [data] = await dbPool.execute(
       `
-        SELECT participants.full_name, participants.email, participants.date_of_birth
-        FROM events
-        INNER JOIN participants ON events.id = participants.events_id
-        WHERE events.organizators_id = ?
-      `,
+SELECT participants.id, participants.full_name, participants.email, participants.date_of_birth
+FROM events
+INNER JOIN participants ON events.id = participants.events_id
+WHERE events.organizators_id = ?
+`,
       [organizatorId]
     );
 
@@ -140,17 +141,17 @@ server.post('/participants', authenticate, async (req, res) => {
   try {
     const [event] = await dbPool.execute(
       `
-        SELECT id
-        FROM events
-        WHERE organizators_id = ?
-      `,
+SELECT id
+FROM events
+WHERE organizators_id = ?
+`,
       [organizatorId]
     );
     const [result] = await dbPool.execute(
       `
-        INSERT INTO participants (full_name, email, date_of_birth, events_id)
-        VALUES (?, ?, ?, ?)
-      `,
+INSERT INTO participants (full_name, email, date_of_birth, events_id)
+VALUES (?, ?, ?, ?)
+`,
       [full_name, email, date_of_birth, event[0].id]
     );
     if (result.affectedRows === 1) {
@@ -171,11 +172,11 @@ server.delete('/participants/:id', authenticate, async (req, res) => {
 
     const [existingParticipant] = await dbPool.execute(
       `
-        SELECT * FROM participants
-        WHERE id = ? AND events_id IN (
-          SELECT id FROM events WHERE organizators_id = ?
-        )
-      `,
+SELECT * FROM participants
+WHERE id = ? AND events_id IN (
+SELECT id FROM events WHERE organizators_id = ?
+)
+`,
       [participantId, organizatorId]
     );
     if (!existingParticipant.length) {
@@ -185,9 +186,9 @@ server.delete('/participants/:id', authenticate, async (req, res) => {
     }
     await dbPool.execute(
       `
-        DELETE FROM participants
-        WHERE id = ?
-      `,
+DELETE FROM participants
+WHERE id = ?
+`,
       [participantId]
     );
 
@@ -216,11 +217,11 @@ server.put('/participants/:id', authenticate, async (req, res) => {
     }
     const [existingParticipant] = await dbPool.execute(
       `
-        SELECT * FROM participants
-        WHERE id = ? AND events_id IN (
-          SELECT id FROM events WHERE organizators_id = ?
-        )
-      `,
+SELECT * FROM participants
+WHERE id = ? AND events_id IN (
+SELECT id FROM events WHERE organizators_id = ?
+)
+`,
       [participantId, organizatorId]
     );
     if (!existingParticipant.length) {
@@ -230,10 +231,10 @@ server.put('/participants/:id', authenticate, async (req, res) => {
     }
     await dbPool.execute(
       `
-        UPDATE participants
-        SET full_name = ?, email = ?, date_of_birth = ?
-        WHERE id = ?
-      `,
+UPDATE participants
+SET full_name = ?, email = ?, date_of_birth = ?
+WHERE id = ?
+`,
       [full_name, email, date_of_birth, participantId]
     );
     return res.status(200).end();
