@@ -130,7 +130,7 @@ const ParticipantsListPage = () => {
   const card = (participantData) => (
     <>
       <CardContent>
-        <Typography variant='h4'>{participantData.full_name}</Typography>
+        <Typography variant='h5'>{participantData.full_name}</Typography>
         <Typography paragraph={true}>{participantData.email}</Typography>
         <Typography paragraph={true}>
           {new Date(participantData.date_of_birth).toLocaleDateString()}

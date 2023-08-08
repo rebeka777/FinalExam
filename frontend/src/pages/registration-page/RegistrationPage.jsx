@@ -7,6 +7,9 @@ import {
   Input,
   Button,
   ErrorMessage,
+  H1,
+  Label,
+  Div,
 } from './RegistrationPage.styled';
 
 const RegistrationPage = () => {
@@ -53,11 +56,11 @@ const RegistrationPage = () => {
 
   return (
     <RegistrationPageContainer>
-      <h2>Register</h2>
+      <H1>Register</H1>
       <Form onSubmit={handleSubmit}>
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        <div>
-          <label htmlFor='fullName'>Full Name:</label>
+        <Div>
+          <Label htmlFor='fullName'>Full Name:</Label>
           <Input
             type='text'
             id='fullName'
@@ -65,9 +68,9 @@ const RegistrationPage = () => {
             onChange={handleFullNameChange}
             required
           />
-        </div>
-        <div>
-          <label htmlFor='email'>Email:</label>
+        </Div>
+        <Div>
+          <Label htmlFor='email'>Email:</Label>
           <Input
             type='email'
             id='email'
@@ -75,9 +78,9 @@ const RegistrationPage = () => {
             onChange={handleEmailChange}
             required
           />
-        </div>
-        <div>
-          <label htmlFor='password'>Password:</label>
+        </Div>
+        <Div>
+          <Label htmlFor='password'>Password:</Label>
           <Input
             type='password'
             id='password'
@@ -85,9 +88,9 @@ const RegistrationPage = () => {
             onChange={handlePasswordChange}
             required
           />
-        </div>
-        <div>
-          <label htmlFor='confirmPassword'>Confirm Password:</label>
+        </Div>
+        <Div>
+          <Label htmlFor='confirmPassword'>Confirm Password:</Label>
           <Input
             type='password'
             id='confirmPassword'
@@ -95,7 +98,7 @@ const RegistrationPage = () => {
             onChange={handleConfirmPasswordChange}
             required
           />
-        </div>
+        </Div>
         <Button type='submit'>Register</Button>
       </Form>
     </RegistrationPageContainer>

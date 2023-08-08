@@ -6,7 +6,10 @@ import {
   Form,
   Input,
   Button,
+  Div,
+  Label,
   ErrorMessage,
+  H1,
 } from './LoginPage.styled';
 
 const LoginPage = () => {
@@ -35,24 +38,24 @@ const LoginPage = () => {
 
   return (
     <LoginPageContainer>
-      <h1>Login</h1>
+      <H1>Login</H1>
       <Form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label>
+        <Div>
+          <Label>Email:</Label>
           <Input
             type='text'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-        </div>
-        <div>
-          <label>Password:</label>
+        </Div>
+        <Div>
+          <Label>Password:</Label>
           <Input
             type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </div>
+        </Div>
         <Button type='submit'>Login</Button>
         {error && <ErrorMessage>{error}</ErrorMessage>}
       </Form>

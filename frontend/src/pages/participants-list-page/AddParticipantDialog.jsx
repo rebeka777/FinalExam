@@ -3,12 +3,19 @@ import PropTypes from 'prop-types';
 import {
   Dialog,
   DialogTitle,
-  DialogContent,
   DialogActions,
   TextField,
   Button,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
+
+import styled from 'styled-components';
+const DialogContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 10px;
+`;
 
 const AddParticipantDialog = ({ open, onClose, onSave, loading }) => {
   const [fullName, setFullName] = useState('');
