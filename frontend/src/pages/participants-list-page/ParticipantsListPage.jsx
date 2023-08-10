@@ -76,7 +76,7 @@ const ParticipantsListPage = () => {
   };
 
   const handleUpdateParticipant = async (updatedParticipant) => {
-    console.log('ParticipantId to update:', updatedParticipant.id);
+    console.log('Updated participant id:', updatedParticipant.id);
     try {
       setIsLoading(true);
       const token = localStorage.getItem('token');
@@ -115,7 +115,7 @@ const ParticipantsListPage = () => {
   };
 
   const handleDeleteParticipant = async (participantId) => {
-    console.log('ParticipantId to delete:', participantId);
+    console.log('Deleted participant:', participantId);
     setIsLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -127,13 +127,30 @@ const ParticipantsListPage = () => {
       setIsLoading(false);
     }
   };
+
+  const participantsAge = (dateOfBirth) => {
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  };
+
   const card = (participantData) => (
     <>
       <CardContent>
         <Typography variant='h5'>{participantData.full_name}</Typography>
         <Typography paragraph={true}>{participantData.email}</Typography>
         <Typography paragraph={true}>
-          {new Date(participantData.date_of_birth).toLocaleDateString()}
+          {`${participantsAge(participantData.date_of_birth)} years old`}
         </Typography>
       </CardContent>
       <Stack spacing={1} alignItems='center' pb={3}>

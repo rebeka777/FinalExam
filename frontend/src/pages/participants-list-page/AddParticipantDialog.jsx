@@ -1,85 +1,76 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+} from '@mui/material';
+
+import { DatePicker } from '@mui/x-date-pickers';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  TextField,
-  Button,
-} from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
-
-import styled from 'styled-components';
-const DialogContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin: 10px;
-`;
 
 const AddParticipantDialog = ({ open, onClose, onSave, loading }) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
 
-  const handleFullNameChange = (e) => {
-    setFullName(e.target.value);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleDateOfBirthChange = (date) => {
-    setDateOfBirth(date);
-  };
-
-  const handleSubmit = () => {
-    onSave({
-      full_name: fullName,
-      email,
-      date_of_birth: dateOfBirth.toISOString().substring(0, 10),
-    });
-  };
-
   return (
-    <Dialog open={open} onClose={onClose} maxWidth='sm' fullWidth>
-      <DialogTitle>Add New Participant</DialogTitle>
+    <Dialog
+      open={open}
+      maxWidth='sm'
+      fullWidth
+      onClose={!loading ? onClose : undefined}
+    >
+      <DialogTitle>Add new participant</DialogTitle>
       <DialogContent>
-        <TextField
-          fullWidth
-          label='Full Name'
-          value={fullName}
-          disabled={loading}
-          onChange={handleFullNameChange}
-        />
-        <DatePicker
-          label='Date of Birth'
-          value={dateOfBirth}
-          disabled={loading}
-          onChange={handleDateOfBirthChange}
-        />
-        <TextField
-          fullWidth
-          label='Email'
-          type='email'
-          value={email}
-          disabled={loading}
-          onChange={handleEmailChange}
-        />
+        <Stack pt={2} spacing={2}>
+          <TextField
+            fullWidth
+            label='Full Name'
+            value={fullName}
+            disabled={loading}
+            onChange={(e) => setFullName(e.target.value)}
+          />
+          <DatePicker
+            label='Date of Birth'
+            value={dateOfBirth}
+            disabled={loading}
+            onChange={(date) => setDateOfBirth(date)}
+          />
+          <TextField
+            fullWidth
+            label='Email'
+            type='email'
+            value={email}
+            disabled={loading}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Stack>
       </DialogContent>
       <DialogActions>
         <Button variant='outlined' disabled={loading} onClick={onClose}>
           Cancel
         </Button>
-        <Button variant='contained' disabled={loading} onClick={handleSubmit}>
+        <Button
+          variant='contained'
+          disabled={loading}
+          onClick={() =>
+            onSave({
+              full_name: fullName,
+              email,
+              date_of_birth: dateOfBirth.toISOString().substring(0, 10),
+            })
+          }
+        >
           Save
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
-
 AddParticipantDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
